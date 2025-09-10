@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Github, Linkedin, Mail, ExternalLink, Download, Code, Calendar, MapPin, Users, Target, Award, Briefcase, ChevronDown, Star, Zap, Shield } from 'lucide-react';
+import { Menu, X, Github, Linkedin, Mail, ExternalLink, Download, Code, Calendar, MapPin, Users, Target, Award, Briefcase, Shield, Star } from 'lucide-react';
 
 // Types
 interface Project {
