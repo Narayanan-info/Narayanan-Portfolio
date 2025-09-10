@@ -6,11 +6,13 @@ const nextConfig = {
     unoptimized: true,
   },
   eslint: {
-    ignoreDuringBuilds: true, // Temporarily ignore ESLint errors during build
+    ignoreDuringBuilds: true,
   },
   typescript: {
-    ignoreBuildErrors: true, // Temporarily ignore TypeScript errors during build
-  }
+    ignoreBuildErrors: true,
+  },
+  trailingSlash: true,
+  assetPrefix: '/Narayanan-Portfolio/',
 }
 
 module.exports = nextConfig
