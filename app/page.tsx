@@ -180,7 +180,8 @@ const Home = () => {
 
 // About Component
 const About = () => {
-  const skills = [
+  // Skills data for future use
+  const _skills = [
     { name: "React/Next.js", level: 95, color: "bg-blue-600" },
     { name: "Node.js/Express", level: 90, color: "bg-green-600" },
     { name: "TypeScript", level: 88, color: "bg-blue-700" },

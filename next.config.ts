@@ -7,6 +7,7 @@ const nextConfig = {
   },
   eslint: {
     ignoreDuringBuilds: true,
+    dirs: ['app']
   },
   typescript: {
     ignoreBuildErrors: true,

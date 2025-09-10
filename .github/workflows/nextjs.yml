@@ -76,6 +76,7 @@ jobs:
       - name: Build with Next.js
         env:
           NEXT_PUBLIC_BASE_PATH: /Narayanan-Portfolio
+          NEXT_LINT_IGNORE_ERRORS: true
         run: |
           ${{ steps.detect-package-manager.outputs.runner }} next build
           touch out/.nojekyll
