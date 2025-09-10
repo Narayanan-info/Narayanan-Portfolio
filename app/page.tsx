@@ -685,8 +685,8 @@ const Footer = () => {
   );
 };
 
-// Main Portfolio Component
-const Portfolio = () => {
+// Main Page Component
+export default function Page() {
   return (
     <div className="bg-white text-gray-800 min-h-screen">
       <Header />
@@ -698,6 +698,4 @@ const Portfolio = () => {
       <Footer />
     </div>
   );
-};
-
-export default Portfolio;
+}
