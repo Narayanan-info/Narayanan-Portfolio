@@ -181,14 +181,14 @@ const Home = () => {
 // About Component
 const About = () => {
   // Skills data for future use
-  const _skills = [
-    { name: "React/Next.js", level: 95, color: "bg-blue-600" },
-    { name: "Node.js/Express", level: 90, color: "bg-green-600" },
-    { name: "TypeScript", level: 88, color: "bg-blue-700" },
-    { name: "Cybersecurity", level: 85, color: "bg-red-600" },
-    { name: "MongoDB/PostgreSQL", level: 82, color: "bg-purple-600" },
-    { name: "Docker/AWS", level: 80, color: "bg-orange-600" }
-  ];
+  // const _skills = [
+  //   { name: "React/Next.js", level: 95, color: "bg-blue-600" },
+  //   { name: "Node.js/Express", level: 90, color: "bg-green-600" },
+  //   { name: "TypeScript", level: 88, color: "bg-blue-700" },
+  //   { name: "Cybersecurity", level: 85, color: "bg-red-600" },
+  //   { name: "MongoDB/PostgreSQL", level: 82, color: "bg-purple-600" },
+  //   { name: "Docker/AWS", level: 80, color: "bg-orange-600" }
+  // ];
 
   return (
     <section id="about" className="py-20 bg-white">
@@ -510,13 +510,13 @@ const Contact = () => {
           <h2 className="text-4xl font-bold text-gray-800 mb-4">Get In Touch</h2>
           <div className="w-20 h-1 bg-red-600 mx-auto mb-6"></div>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Ready to collaborate on your next project? Let's discuss how we can work together.
+            Ready to collaborate on your next project? Let&apos;s discuss how we can work together.
           </p>
         </div>
 
         <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12">
           <div>
-            <h3 className="text-2xl font-bold text-gray-800 mb-8">Let's Connect</h3>
+            <h3 className="text-2xl font-bold text-gray-800 mb-8">Let&apos;s Connect</h3>
             
             <div className="space-y-6 mb-8">
               <div className="flex items-center gap-4">
