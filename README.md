@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Narayanan K - Portfolio
 
-## Getting Started
+Welcome to my professional portfolio! This repository contains the source code for my personal portfolio website, showcasing my work as a DevSecOps & Security Engineer.
 
-First, run the development server:
+🔗 [View Live Portfolio](https://narayanan-info.github.io/Narayanan-Portfolio/)
 
+## 🛠️ Built With
+
+- **Framework**: [Next.js 15.5.2](https://nextjs.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Font**: [Geist](https://vercel.com/font)
+- **Deployment**: GitHub Pages
+- **Container**: Docker support
+
+## ✨ Features
+
+- 🌗 Modern, responsive design
+- 🚀 Fast performance and SEO optimized
+- 📱 Mobile-first approach
+- 🔒 Security-focused implementation
+- 🐳 Docker support for containerization
+- 📧 Contact form functionality
+- 📄 Downloadable CV option
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18 or later
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/Narayanan-info/Narayanan-Portfolio.git
+cd Narayanan-Portfolio
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Run the development server:
+```bash
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-## Learn More
+### 🐳 Docker Support
 
-To learn more about Next.js, take a look at the following resources:
+Build and run using Docker:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+# Build the image
+docker build -t portfolio .
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Run the container
+docker run -p 3000:3000 portfolio
+```
 
-## Deploy on Vercel
+## 🌟 Project Structure
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+portfolio/
+├── app/
+│   ├── layout.tsx      # Root layout
+│   ├── page.tsx        # Main portfolio component
+│   └── globals.css     # Global styles
+├── public/
+│   └── assets/         # Static assets
+├── next.config.ts      # Next.js configuration
+└── tailwind.config.js  # Tailwind configuration
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🚀 Deployment
+
+This portfolio is configured for GitHub Pages deployment. The deployment process is automated through GitHub Actions.
+
+To deploy:
+1. Push changes to the main branch
+2. GitHub Actions will automatically build and deploy
+3. Visit the deployed site at [https://narayanan-info.github.io/Narayanan-Portfolio/](https://narayanan-info.github.io/Narayanan-Portfolio/)
+
+## 📝 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 📬 Contact
+
+- LinkedIn: [narayanan-k1](https://www.linkedin.com/in/narayanan-k1/)
+- Email: narayanan.k.info@gmail.com
+- GitHub: [@Narayanan-info](https://github.com/Narayanan-info)
+
+---
+
+Made with ❤️ by Narayanan K in Chennai, India
