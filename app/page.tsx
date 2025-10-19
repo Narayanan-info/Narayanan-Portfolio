@@ -209,8 +209,8 @@ const Home = () => {
             <div className="grid grid-cols-2 gap-4 sm:gap-6">
               {[
                 { icon: Briefcase, count: "4+", label: "Years Experience", bgColor: "bg-red-50", iconColor: "text-red-600" },
-                { icon: Code, count: "3+", label: "Projects Completed", bgColor: "bg-blue-50", iconColor: "text-blue-600" },
-                { icon: Users, count: "1+", label: "Happy Clients", bgColor: "bg-green-50", iconColor: "text-green-600" },
+                { icon: Code, count: "2+", label: "Projects Completed", bgColor: "bg-blue-50", iconColor: "text-blue-600" },
+                { icon: Users, count: "0", label: "Happy User's", bgColor: "bg-green-50", iconColor: "text-green-600" },
                 { icon: Award, count: "3+", label: "Certifications", bgColor: "bg-purple-50", iconColor: "text-purple-600" }
               ].map((stat, index) => (
                 <div 
@@ -594,7 +594,7 @@ const Contact = () => {
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">Get In Touch</h2>
           <div className="w-20 h-1 bg-red-600 mx-auto mb-6"></div>
           <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
-            Ready to collaborate on your next project? Let&apos;s discuss how we can work together.
+            Ready to collaborate on your next open source project? Let&apos;s discuss how we can work together.
           </p>
         </div>
 
