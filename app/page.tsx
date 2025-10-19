@@ -295,15 +295,15 @@ const About = () => {
                 <div className="space-y-3 text-xs sm:text-sm">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">BSides Chennai Member</span>
-                    <span className="text-blue-600 font-medium">2024</span>
+                    <span className="text-blue-600 font-medium">2024-Present</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Null Chennai Member</span>
-                    <span className="text-blue-600 font-medium">2022-Present</span>
+                    <span className="text-blue-600 font-medium">2024-Present</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Open Source Contributor</span>
-                    <span className="text-blue-600 font-medium">2024-Present</span>
+                    <span className="text-blue-600 font-medium">2025</span>
                   </div>
                 </div>
               </div>
