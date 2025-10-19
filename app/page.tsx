@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Github, Linkedin, Mail, ExternalLink, Download, Code, Calendar, MapPin, Users, Target, Award, Briefcase, Shield, Star } from 'lucide-react';
+import { Menu, X, Github, Linkedin, Mail, ExternalLink, Download, Code, Calendar, MapPin, Users, Target, Award, Briefcase, Shield, Star, CheckCircle, AlertCircle } from 'lucide-react';
 
 // Types
 interface Project {
@@ -19,6 +19,47 @@ interface Experience {
   period: string;
   description: string;
 }
+
+interface AlertProps {
+  type: 'success' | 'error';
+  message: string;
+  onClose: () => void;
+}
+
+// Alert Component
+const Alert: React.FC<AlertProps> = ({ type, message, onClose }) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onClose();
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
+  return (
+    <div className={`fixed top-24 right-4 md:right-8 z-50 max-w-md w-full mx-4 md:mx-0 animate-slide-in ${
+      type === 'success' ? 'bg-green-50 border-green-500' : 'bg-red-50 border-red-500'
+    } border-l-4 p-4 rounded-lg shadow-lg`}>
+      <div className="flex items-start gap-3">
+        {type === 'success' ? (
+          <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+        ) : (
+          <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+        )}
+        <div className="flex-1">
+          <p className={`text-sm font-medium ${type === 'success' ? 'text-green-800' : 'text-red-800'}`}>
+            {message}
+          </p>
+        </div>
+        <button
+          onClick={onClose}
+          className={`${type === 'success' ? 'text-green-600 hover:text-green-800' : 'text-red-600 hover:text-red-800'} transition-colors`}
+        >
+          <X size={18} />
+        </button>
+      </div>
+    </div>
+  );
+};
 
 // Header Component
 const Header = () => {
@@ -42,16 +83,14 @@ const Header = () => {
     <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${
       scrolled ? 'bg-white shadow-lg border-b border-gray-100' : 'bg-white/95 backdrop-blur-sm'
     }`}>
-      <nav className="container mx-auto px-6 py-4">
+      <nav className="container mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
         <div className="flex justify-between items-center">
-          <div className="flex items-center space-x-3">
-            <div className="relative">
-            </div>
-            <div className="text-2xl font-bold text-gray-800">Portfolio</div>
-            <div className="text-red-600 font-bold text-xl">Narayanan K</div>
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <div className="text-xl sm:text-2xl font-bold text-gray-800">Portfolio</div>
+            <div className="text-red-600 font-bold text-lg sm:text-xl">Narayanan K</div>
           </div>
           
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex space-x-6 lg:space-x-8">
             {['Home', 'About', 'Projects', 'Experience', 'Contact'].map((item) => (
               <button
                 key={item}
@@ -65,20 +104,21 @@ const Header = () => {
           </div>
 
           <button
-            className="md:hidden text-gray-800 hover:text-red-600 transition-colors duration-200"
+            className="md:hidden text-gray-800 hover:text-red-600 transition-colors duration-200 p-2"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
         {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 border-t border-gray-200">
+          <div className="md:hidden mt-4 pb-4 border-t border-gray-200 animate-slide-down">
             {['Home', 'About', 'Projects', 'Experience', 'Contact'].map((item) => (
               <button
                 key={item}
                 onClick={() => scrollToSection(item.toLowerCase())}
-                className="block w-full text-left py-3 text-gray-600 hover:text-red-600 transition-colors duration-200 font-medium"
+                className="block w-full text-left py-3 px-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200 font-medium"
               >
                 {item}
               </button>
@@ -92,67 +132,81 @@ const Header = () => {
 
 // Home Component
 const Home = () => {
+  const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+
+  const handleDownloadCV = () => {
+    try {
+      const cvPath = '/assets/Narayanan-2025.pdf';
+      const link = document.createElement('a');
+      link.href = cvPath;
+      link.download = 'narayanan-devsecops-cv.pdf';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setAlert({ type: 'success', message: 'CV download started successfully!' });
+    } catch (error) {
+      setAlert({ type: 'error', message: 'Failed to download CV. Please try again.' });
+    }
+  };
+
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center bg-gray-50 pt-20">
-      <div className="container mx-auto px-6 py-20">
+    <section id="home" className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 via-white to-red-50 pt-20">
+      {alert && (
+        <Alert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert(null)}
+        />
+      )}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="space-y-8">
-              <div className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-full shadow-md">
-                <span className="w-2 h-2 bg-green-400 rounded-full"></span>
-                Available for Work
+          <div className="grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
+            <div className="space-y-6 sm:space-y-8">
+              <div className="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-red-600 text-white rounded-full shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                <span className="text-sm sm:text-base">Available for Work</span>
               </div>
               
-              <h1 className="text-6xl lg:text-7xl font-bold text-gray-800 leading-tight">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-800 leading-tight">
                 NARAYANAN
-                <span className="block text-red-600">DEVSECOPS</span>
+                <span className="block text-red-600 mt-2">DEVSECOPS</span>
               </h1>
               
-              <p className="text-xl text-gray-600 leading-relaxed">
+              <p className="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed">
                 DevSecOps & Security Engineer | 4+ Years in Application Security (Web, Mobile, API), Cloud Security (AWS/GCP/Azure), and Container Security with StackRox Expertise
                 Based in Chennai, India.
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <button
                   onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}
-                  className="px-8 py-4 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors duration-200"
+                  className="px-6 sm:px-8 py-3 sm:py-4 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl text-sm sm:text-base"
                 >
                   View Projects
                 </button>
                 <button 
-                  onClick={() => {
-                    // The path should be relative to the public folder
-                    const cvPath = '/assets/Narayanan-2025.pdf';
-                    // Create a temporary link element
-                    const link = document.createElement('a');
-                    link.href = cvPath;
-                    link.download = 'narayanan-devsecops-cv.pdf'; // Name that will appear when downloading
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                  }}
-                  className="px-8 py-4 border border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center gap-2"
+                  onClick={handleDownloadCV}
+                  className="px-6 sm:px-8 py-3 sm:py-4 border-2 border-gray-300 text-gray-700 rounded-lg font-medium hover:bg-gray-50 hover:border-red-600 hover:text-red-600 transition-all duration-200 flex items-center justify-center gap-2 text-sm sm:text-base"
                 >
-                  <Download size={20} />
+                  <Download size={18} className="sm:w-5 sm:h-5" />
                   Download CV
                 </button>
               </div>
               
-              <div className="flex space-x-6">
-                <a href="https://github.com/Narayanan-info" className="text-gray-400 hover:text-red-600 transition-colors duration-200">
-                  <Github size={24} />
+              <div className="flex space-x-4 sm:space-x-6">
+                <a href="https://github.com/Narayanan-info" className="text-gray-400 hover:text-red-600 transform hover:scale-110 transition-all duration-200">
+                  <Github size={22} className="sm:w-6 sm:h-6" />
                 </a>
-                <a href="https://www.linkedin.com/in/narayanan-k1/" className="text-gray-400 hover:text-blue-600 transition-colors duration-200">
-                  <Linkedin size={24} />
+                <a href="https://www.linkedin.com/in/narayanan-k1/" className="text-gray-400 hover:text-blue-600 transform hover:scale-110 transition-all duration-200">
+                  <Linkedin size={22} className="sm:w-6 sm:h-6" />
                 </a>
-                <a href="mailto:narayanan.k.info@gmail.com" className="text-gray-400 hover:text-red-600 transition-colors duration-200">
-                  <Mail size={24} />
+                <a href="mailto:narayanan.k.info@gmail.com" className="text-gray-400 hover:text-red-600 transform hover:scale-110 transition-all duration-200">
+                  <Mail size={22} className="sm:w-6 sm:h-6" />
                 </a>
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-2 gap-4 sm:gap-6">
               {[
                 { icon: Briefcase, count: "4+", label: "Years Experience", bgColor: "bg-red-50", iconColor: "text-red-600" },
                 { icon: Code, count: "3+", label: "Projects Completed", bgColor: "bg-blue-50", iconColor: "text-blue-600" },
@@ -161,13 +215,13 @@ const Home = () => {
               ].map((stat, index) => (
                 <div 
                   key={index}
-                  className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300"
+                  className="bg-white rounded-xl p-4 sm:p-6 shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300"
                 >
-                  <div className={`w-12 h-12 ${stat.bgColor} rounded-lg flex items-center justify-center mb-4`}>
-                    <stat.icon className={`w-6 h-6 ${stat.iconColor}`} />
+                  <div className={`w-10 h-10 sm:w-12 sm:h-12 ${stat.bgColor} rounded-lg flex items-center justify-center mb-3 sm:mb-4`}>
+                    <stat.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.iconColor}`} />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-800 mb-2">{stat.count}</h3>
-                  <p className="text-gray-600">{stat.label}</p>
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-1 sm:mb-2">{stat.count}</h3>
+                  <p className="text-xs sm:text-sm text-gray-600">{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -180,84 +234,74 @@ const Home = () => {
 
 // About Component
 const About = () => {
-  // Skills data for future use
-  // const _skills = [
-  //   { name: "React/Next.js", level: 95, color: "bg-blue-600" },
-  //   { name: "Node.js/Express", level: 90, color: "bg-green-600" },
-  //   { name: "TypeScript", level: 88, color: "bg-blue-700" },
-  //   { name: "Cybersecurity", level: 85, color: "bg-red-600" },
-  //   { name: "MongoDB/PostgreSQL", level: 82, color: "bg-purple-600" },
-  //   { name: "Docker/AWS", level: 80, color: "bg-orange-600" }
-  // ];
-
   return (
-    <section id="about" className="py-20 bg-white">
-      <div className="container mx-auto px-6">
+    <section id="about" className="py-12 sm:py-16 lg:py-20 bg-white">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">About Me</h2>
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">About Me</h2>
             <div className="w-20 h-1 bg-red-600 mx-auto mb-6"></div>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
               Passionate security engineer with expertise in building secure, scalable applications and contributing to the cybersecurity community.
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
             <div className="lg:col-span-2 space-y-6">
-              <div className="bg-gray-50 rounded-xl p-8 shadow-md">
-                <p className="text-gray-600 mb-6 leading-relaxed">
-                  DevSecOps Analyst and Security Engineer with 𝟰+ 𝘆𝗲𝗮𝗿𝘀 of experience securing applications and cloud infrastructure. 
+              <div className="bg-gradient-to-br from-gray-50 to-red-50 rounded-xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 leading-relaxed">
+                  DevSecOps Analyst and Security Engineer with <strong>4+ years</strong> of experience securing applications and cloud infrastructure. 
                   I specialize in Web, Mobile, and API Penetration Testing, Vulnerability Management, and Secure SDLC integration, 
                   with hands-on expertise in CI/CD security automation across AWS, GCP, and Azure.
                 </p>
-                <p className="text-gray-600 mb-6 leading-relaxed">
+                <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 leading-relaxed">
                   My work blends offensive and defensive security, from identifying vulnerabilities and simulating real-world attacks to building automated, 
                   resilient defenses that reduce risk and improve operational efficiency.
                 </p>
-                <p className="text-gray-600 leading-relaxed">
-                 Currently, I am working as an 𝗟𝟯 𝗗𝗲𝘃𝗦𝗲𝗰𝗢𝗽𝘀 𝗔𝗻𝗮𝗹𝘆𝘀𝘁 𝗮𝘁 𝗠𝟮𝗣, driving end-to-end security automation, building secure CI/CD pipelines, 
+                <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                 Currently, I am working as an <strong>L3 DevSecOps Analyst at M2P</strong>, driving end-to-end security automation, building secure CI/CD pipelines, 
                  and implementing solutions that enhance application, cloud, and container security.
                 </p>
               </div>
             </div>
 
             <div className="space-y-6">
-              <div className="bg-red-50 rounded-xl p-6 shadow-md">
-                <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+              <div className="bg-gradient-to-br from-red-50 to-orange-50 rounded-xl p-5 sm:p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <h3 className="font-bold text-gray-800 mb-4 flex items-center gap-2 text-base sm:text-lg">
                   <Shield className="w-5 h-5 text-red-600" />
                   Quick Info
                 </h3>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <MapPin size={16} className="text-red-600" />
-                    <span className="text-gray-600">Chennai, India</span>
+                    <MapPin size={16} className="text-red-600 flex-shrink-0" />
+                    <span className="text-sm sm:text-base text-gray-600">Chennai, India</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Calendar size={16} className="text-green-600" />
-                    <span className="text-gray-600">Available: Immediately</span>
+                    <Calendar size={16} className="text-green-600 flex-shrink-0" />
+                    <span className="text-sm sm:text-base text-gray-600">Available: Immediately</span>
                   </div>
                   <div className="flex items-center gap-3">
-                    <Target size={16} className="text-blue-600" />
-                    <span className="text-gray-600">Focus: Security & Performance</span>
+                    <Target size={16} className="text-blue-600 flex-shrink-0" />
+                    <span className="text-sm sm:text-base text-gray-600">Focus: Security & Performance</span>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-blue-50 rounded-xl p-6 shadow-md">
-                <h4 className="font-bold text-gray-800 mb-4 flex items-center gap-2">
+              <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-5 sm:p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <h4 className="font-bold text-gray-800 mb-4 flex items-center gap-2 text-base sm:text-lg">
                   <Star className="w-5 h-5 text-blue-600" />
                   Community
                 </h4>
-                <div className="space-y-3 text-sm">
-                  <div className="flex justify-between">
+                <div className="space-y-3 text-xs sm:text-sm">
+                  <div className="flex justify-between items-center">
                     <span className="text-gray-600">BSides Chennai Member</span>
                     <span className="text-blue-600 font-medium">2024</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-center">
                     <span className="text-gray-600">Null Chennai Member</span>
                     <span className="text-blue-600 font-medium">2022-Present</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-center">
                     <span className="text-gray-600">Open Source Contributor</span>
                     <span className="text-blue-600 font-medium">2024-Present</span>
                   </div>
@@ -286,7 +330,7 @@ const Projects = () => {
     },
     {
       id: 2,
-      title: "File Upload Secuirty Best Practices",
+      title: "File Upload Security Best Practices",
       description: "This is a secure file upload API built using Node.js and Express, following best practices to handle file uploads with proper validation and security measures.",
       tech: ["Node.js"],
       github: "https://github.com/Narayanan-info/File_Upload_Security_Best_Practices",
@@ -298,25 +342,25 @@ const Projects = () => {
   const filteredProjects = filter === 'All' ? projects : projects.filter(p => p.category === filter);
 
   return (
-    <section id="projects" className="py-20 bg-gray-50">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-800 mb-4">Featured Projects</h2>
+    <section id="projects" className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-gray-50 via-white to-blue-50">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12 sm:mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">Featured Projects</h2>
           <div className="w-20 h-1 bg-red-600 mx-auto mb-6"></div>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
             A collection of projects showcasing expertise in web development, cybersecurity, and modern technologies.
           </p>
         </div>
 
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-8 sm:mb-12 px-4">
           {categories.map((category) => (
             <button
               key={category}
               onClick={() => setFilter(category)}
-              className={`px-6 py-2 rounded-full font-medium transition-colors duration-200 ${
+              className={`px-4 sm:px-6 py-2 rounded-full font-medium transition-all duration-200 text-sm sm:text-base ${
                 filter === category
-                  ? 'bg-red-600 text-white shadow-md'
-                  : 'bg-white text-gray-600 hover:bg-red-50 hover:text-red-600 shadow-sm'
+                  ? 'bg-red-600 text-white shadow-lg transform scale-105'
+                  : 'bg-white text-gray-600 hover:bg-red-50 hover:text-red-600 shadow-sm hover:shadow-md'
               }`}
             >
               {category}
@@ -324,22 +368,22 @@ const Projects = () => {
           ))}
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
           {filteredProjects.map((project) => (
             <div
               key={project.id}
-              className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden"
+              className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden transform hover:-translate-y-2"
             >
-              <div className={`h-1 ${
-                project.category === 'Security' ? 'bg-red-600' :
-                project.category === 'Web Development' ? 'bg-blue-600' :
-                'bg-green-600'
+              <div className={`h-1.5 ${
+                project.category === 'Security' ? 'bg-gradient-to-r from-red-600 to-orange-600' :
+                project.category === 'Web Development' ? 'bg-gradient-to-r from-blue-600 to-purple-600' :
+                'bg-gradient-to-r from-green-600 to-teal-600'
               }`}></div>
               
-              <div className="p-6">
+              <div className="p-5 sm:p-6">
                 <div className="flex justify-between items-start mb-4">
-                  <h3 className="text-xl font-bold text-gray-800">{project.title}</h3>
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-800 pr-2">{project.title}</h3>
+                  <span className={`px-2 sm:px-3 py-1 rounded-full text-xs font-medium flex-shrink-0 ${
                     project.category === 'Security' ? 'bg-red-100 text-red-700' :
                     project.category === 'Web Development' ? 'bg-blue-100 text-blue-700' :
                     'bg-green-100 text-green-700'
@@ -348,13 +392,13 @@ const Projects = () => {
                   </span>
                 </div>
                 
-                <p className="text-gray-600 mb-4 leading-relaxed">{project.description}</p>
+                <p className="text-sm sm:text-base text-gray-600 mb-4 leading-relaxed">{project.description}</p>
                 
                 <div className="flex flex-wrap gap-2 mb-6">
                   {project.tech.map((tech) => (
                     <span
                       key={tech}
-                      className="px-3 py-1 bg-gray-100 text-gray-700 rounded-md text-sm"
+                      className="px-2 sm:px-3 py-1 bg-gray-100 text-gray-700 rounded-md text-xs sm:text-sm"
                     >
                       {tech}
                     </span>
@@ -365,6 +409,8 @@ const Projects = () => {
                   {project.github && (
                     <a
                       href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors duration-200 text-sm font-medium"
                     >
                       <Github size={16} />
@@ -374,6 +420,8 @@ const Projects = () => {
                   {project.demo && (
                     <a
                       href={project.demo}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex items-center gap-2 text-gray-600 hover:text-red-600 transition-colors duration-200 text-sm font-medium"
                     >
                       <ExternalLink size={16} />
@@ -386,9 +434,9 @@ const Projects = () => {
           ))}
         </div>
 
-        <div className="text-center mt-12">
+        <div className="text-center mt-8 sm:mt-12">
           <button
-            className="px-8 py-3 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors duration-200 flex items-center gap-2 mx-auto"
+            className="px-6 sm:px-8 py-3 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-all duration-200 flex items-center gap-2 mx-auto shadow-lg hover:shadow-xl transform hover:scale-105 text-sm sm:text-base"
             onClick={() => window.open('https://github.com/Narayanan-info', '_blank')}
           >
             View All Projects
@@ -418,39 +466,39 @@ const Experience = () => {
   ];
 
   return (
-    <section id="experience" className="py-20 bg-white">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-800 mb-4">Experience</h2>
+    <section id="experience" className="py-12 sm:py-16 lg:py-20 bg-white">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12 sm:mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">Experience</h2>
           <div className="w-20 h-1 bg-red-600 mx-auto mb-6"></div>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
             Professional journey building secure, innovative solutions across various industries.
           </p>
         </div>
 
         <div className="max-w-4xl mx-auto">
-          <div className="space-y-8">
+          <div className="space-y-6 sm:space-y-8">
             {experiences.map((exp, index) => (
               <div key={index} className="relative">
-                <div className="flex items-start gap-6">
-                  <div className="flex-shrink-0 w-12 h-12 bg-red-600 rounded-full flex items-center justify-center">
-                    <Briefcase className="w-6 h-6 text-white" />
+                <div className="flex items-start gap-4 sm:gap-6">
+                  <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-red-600 to-orange-600 rounded-full flex items-center justify-center shadow-lg">
+                    <Briefcase className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
                   
-                  <div className="flex-grow bg-gray-50 rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow duration-300">
-                    <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-3">
+                  <div className="flex-grow bg-gradient-to-br from-gray-50 to-red-50 rounded-xl p-5 sm:p-6 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-3 gap-2">
                       <div>
-                        <h3 className="text-xl font-bold text-gray-800">{exp.title}</h3>
-                        <p className="text-red-600 font-medium">{exp.company}</p>
+                        <h3 className="text-lg sm:text-xl font-bold text-gray-800">{exp.title}</h3>
+                        <p className="text-red-600 font-medium text-sm sm:text-base">{exp.company}</p>
                       </div>
-                      <span className="text-gray-500 text-sm mt-1 md:mt-0">{exp.period}</span>
+                      <span className="text-gray-500 text-xs sm:text-sm font-medium bg-white px-3 py-1 rounded-full shadow-sm inline-block w-fit">{exp.period}</span>
                     </div>
-                    <p className="text-gray-600 leading-relaxed">{exp.description}</p>
+                    <p className="text-sm sm:text-base text-gray-600 leading-relaxed">{exp.description}</p>
                   </div>
                 </div>
                 
                 {index < experiences.length - 1 && (
-                  <div className="absolute left-6 top-12 w-0.5 h-16 bg-gray-200"></div>
+                  <div className="absolute left-5 sm:left-6 top-12 sm:top-14 w-0.5 h-12 sm:h-16 bg-gradient-to-b from-gray-300 to-transparent"></div>
                 )}
               </div>
             ))}
@@ -469,18 +517,46 @@ const Contact = () => {
     subject: '',
     message: ''
   });
+  const [alert, setAlert] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const validateEmail = (email: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
 
   const handleSubmit = async (e: React.MouseEvent) => {
     e.preventDefault();
     
-    // Basic validation
-    if (!formData.name || !formData.email || !formData.message) {
-      alert('Please fill in all required fields');
+    // Validation
+    if (!formData.name.trim()) {
+      setAlert({ type: 'error', message: 'Please enter your name' });
+      return;
+    }
+    
+    if (!formData.email.trim()) {
+      setAlert({ type: 'error', message: 'Please enter your email address' });
+      return;
+    }
+    
+    if (!validateEmail(formData.email)) {
+      setAlert({ type: 'error', message: 'Please enter a valid email address' });
+      return;
+    }
+    
+    if (!formData.message.trim()) {
+      setAlert({ type: 'error', message: 'Please enter a message' });
       return;
     }
 
+    if (formData.message.trim().length < 10) {
+      setAlert({ type: 'error', message: 'Message must be at least 10 characters long' });
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
-      // You can use the mailto URL scheme for a basic solution
       const mailtoUrl = `mailto:narayanan.k.info@gmail.com?subject=${encodeURIComponent(formData.subject || 'Contact Form Submission')}&body=${encodeURIComponent(
         `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
       )}`;
@@ -489,10 +565,11 @@ const Contact = () => {
       
       // Clear the form
       setFormData({ name: '', email: '', subject: '', message: '' });
-      alert('Thank you for your message! Opening your email client...');
+      setAlert({ type: 'success', message: 'Opening your email client. Thank you for reaching out!' });
     } catch (error) {
-      console.error('Error sending email:', error);
-      alert('There was an error sending your message. Please try again.');
+      setAlert({ type: 'error', message: 'Failed to send message. Please try again or email directly.' });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -504,140 +581,138 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-20 bg-gray-50">
-      <div className="container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-800 mb-4">Get In Touch</h2>
+    <section id="contact" className="py-12 sm:py-16 lg:py-20 bg-gradient-to-br from-gray-50 via-white to-purple-50">
+      {alert && (
+        <Alert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert(null)}
+        />
+      )}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12 sm:mb-16">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-4">Get In Touch</h2>
           <div className="w-20 h-1 bg-red-600 mx-auto mb-6"></div>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-gray-600 max-w-2xl mx-auto px-4">
             Ready to collaborate on your next project? Let&apos;s discuss how we can work together.
           </p>
         </div>
 
-        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12">
+        <div className="max-w-6xl mx-auto grid lg:grid-cols-2 gap-8 sm:gap-12">
           <div>
-            <h3 className="text-2xl font-bold text-gray-800 mb-8">Let&apos;s Connect</h3>
+            <h3 className="text-2xl font-bold text-gray-800 mb-6 sm:mb-8">Let&apos;s Connect</h3>
             
-            <div className="space-y-6 mb-8">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
+            <div className="space-y-5 sm:space-y-6 mb-6 sm:mb-8">
+              <a href="mailto:narayanan.k.info@gmail.com" className="flex items-center gap-4 group">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-red-100 to-orange-100 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200 shadow-md">
                   <Mail className="w-6 h-6 text-red-600" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-800">Email</p>
-                  <p className="text-gray-600">narayanan.k.info@gmail.com</p>
+                  <p className="font-medium text-gray-800 text-sm sm:text-base">Email</p>
+                  <p className="text-gray-600 text-sm sm:text-base break-all">narayanan.k.info@gmail.com</p>
                 </div>
-              </div>
+              </a>
               
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+              <a href="https://github.com/Narayanan-info" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 group">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200 shadow-md">
                   <Github className="w-6 h-6 text-blue-600" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-800">GitHub</p>
-                  <p className="text-gray-600">github.com/Narayanan-info</p>
+                  <p className="font-medium text-gray-800 text-sm sm:text-base">GitHub</p>
+                  <p className="text-gray-600 text-sm sm:text-base break-all">github.com/Narayanan-info</p>
                 </div>
-              </div>
+              </a>
               
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+              <a href="https://www.linkedin.com/in/narayanan-k1/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 group">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform duration-200 shadow-md">
                   <Linkedin className="w-6 h-6 text-purple-600" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-800">LinkedIn</p>
-                  <p className="text-gray-600">linkedin.com/in/narayanan-k1/</p>
+                  <p className="font-medium text-gray-800 text-sm sm:text-base">LinkedIn</p>
+                  <p className="text-gray-600 text-sm sm:text-base break-all">linkedin.com/in/narayanan-k1/</p>
                 </div>
-              </div>
+              </a>
               
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-green-100 to-teal-100 rounded-lg flex items-center justify-center shadow-md">
                   <MapPin className="w-6 h-6 text-green-600" />
                 </div>
                 <div>
-                  <p className="font-medium text-gray-800">Location</p>
-                  <p className="text-gray-600">Chennai, Tamil Nadu, India</p>
+                  <p className="font-medium text-gray-800 text-sm sm:text-base">Location</p>
+                  <p className="text-gray-600 text-sm sm:text-base">Chennai, Tamil Nadu, India</p>
                 </div>
               </div>
             </div>
-
-            {/* <div className="bg-white rounded-lg p-6 shadow-lg">
-              <h4 className="font-bold text-gray-800 mb-4">Community Involvement</h4>
-              <div className="space-y-3 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">BSides Chennai Speaker</span>
-                  <span className="text-red-600 font-medium">2024</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Null Chennai Member</span>
-                  <span className="text-red-600 font-medium">2022-Present</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Open Source Contributor</span>
-                  <span className="text-red-600 font-medium">2020-Present</span>
-                </div>
-              </div>
-            </div> */}
           </div>
 
-          <div className="bg-white rounded-xl shadow-lg p-8">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6">Send a Message</h3>
+          <div className="bg-white rounded-xl shadow-xl p-6 sm:p-8 hover:shadow-2xl transition-shadow duration-300">
+            <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6">Send a Message</h3>
             
-            <div className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-4">
+            <div className="space-y-5 sm:space-y-6">
+              <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-gray-700 font-medium mb-2">Name *</label>
+                  <label className="block text-gray-700 font-medium mb-2 text-sm sm:text-base">Name *</label>
                   <input
                     type="text"
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500 transition-colors duration-200"
+                    className="w-full px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                     placeholder="Your name"
+                    disabled={isSubmitting}
                   />
                 </div>
                 
                 <div>
-                  <label className="block text-gray-700 font-medium mb-2">Email *</label>
+                  <label className="block text-gray-700 font-medium mb-2 text-sm sm:text-base">Email *</label>
                   <input
                     type="email"
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500 transition-colors duration-200"
+                    className="w-full px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                     placeholder="your.email@example.com"
+                    disabled={isSubmitting}
                   />
                 </div>
               </div>
               
               <div>
-                <label className="block text-gray-700 font-medium mb-2">Subject</label>
+                <label className="block text-gray-700 font-medium mb-2 text-sm sm:text-base">Subject</label>
                 <input
                   type="text"
                   name="subject"
                   value={formData.subject}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500 transition-colors duration-200"
+                  className="w-full px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                   placeholder="Project discussion"
+                  disabled={isSubmitting}
                 />
               </div>
               
               <div>
-                <label className="block text-gray-700 font-medium mb-2">Message *</label>
+                <label className="block text-gray-700 font-medium mb-2 text-sm sm:text-base">Message *</label>
                 <textarea
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
                   rows={5}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-red-500 transition-colors duration-200 resize-none"
+                  className="w-full px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all duration-200 resize-none text-sm sm:text-base"
                   placeholder="Tell me about your project or how I can help..."
+                  disabled={isSubmitting}
                 />
               </div>
               
               <button
                 onClick={handleSubmit}
-                className="w-full px-8 py-4 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors duration-200"
+                disabled={isSubmitting}
+                className={`w-full px-6 sm:px-8 py-3 sm:py-4 bg-red-600 text-white rounded-lg font-medium transition-all duration-200 shadow-lg text-sm sm:text-base ${
+                  isSubmitting 
+                    ? 'opacity-50 cursor-not-allowed' 
+                    : 'hover:bg-red-700 hover:shadow-xl transform hover:scale-105'
+                }`}
               >
-                Send Message
+                {isSubmitting ? 'Sending...' : 'Send Message'}
               </button>
             </div>
           </div>
@@ -650,32 +725,32 @@ const Contact = () => {
 // Footer Component
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 py-12">
-      <div className="container mx-auto px-6">
+    <footer className="bg-gradient-to-br from-gray-800 to-gray-900 py-10 sm:py-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <div className="text-2xl font-bold text-white">Portfolio</div>
-            <div className="text-red-600 font-bold text-xl">Narayanan K</div>
+            <div className="text-xl sm:text-2xl font-bold text-white">Portfolio</div>
+            <div className="text-red-600 font-bold text-lg sm:text-xl">Narayanan K</div>
           </div>
           
-          <p className="text-gray-400 mb-6">
+          <p className="text-gray-400 mb-6 text-sm sm:text-base px-4">
             Building secure digital solutions for a connected world.
           </p>
           
           <div className="flex justify-center space-x-6 mb-8">
-            <a href="https://github.com/Narayanan-info" className="text-gray-400 hover:text-red-600 transition-colors duration-200">
-              <Github size={24} />
+            <a href="https://github.com/Narayanan-info" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-600 transition-all duration-200 transform hover:scale-110">
+              <Github size={22} className="sm:w-6 sm:h-6" />
             </a>
-            <a href="https://www.linkedin.com/in/narayanan-k1/" className="text-gray-400 hover:text-red-600 transition-colors duration-200">
-              <Linkedin size={24} />
+            <a href="https://www.linkedin.com/in/narayanan-k1/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-red-600 transition-all duration-200 transform hover:scale-110">
+              <Linkedin size={22} className="sm:w-6 sm:h-6" />
             </a>
-            <a href="mailto:narayanan.k.info@gmail.com" className="text-gray-400 hover:text-red-600 transition-colors duration-200">
-              <Mail size={24} />
+            <a href="mailto:narayanan.k.info@gmail.com" className="text-gray-400 hover:text-red-600 transition-all duration-200 transform hover:scale-110">
+              <Mail size={22} className="sm:w-6 sm:h-6" />
             </a>
           </div>
           
-          <div className="border-t border-gray-700 pt-8">
-            <p className="text-gray-500 text-sm">
+          <div className="border-t border-gray-700 pt-6 sm:pt-8">
+            <p className="text-gray-500 text-xs sm:text-sm px-4">
               © 2025 Narayanan K. Made with ❤️ in Chennai, India.
             </p>
           </div>
@@ -689,6 +764,41 @@ const Footer = () => {
 export default function Page() {
   return (
     <div className="bg-white text-gray-800 min-h-screen">
+      <style jsx global>{`
+        @keyframes slide-in {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+        
+        @keyframes slide-down {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .animate-slide-in {
+          animation: slide-in 0.3s ease-out;
+        }
+        
+        .animate-slide-down {
+          animation: slide-down 0.3s ease-out;
+        }
+        
+        html {
+          scroll-behavior: smooth;
+        }
+      `}</style>
       <Header />
       <Home />
       <About />
