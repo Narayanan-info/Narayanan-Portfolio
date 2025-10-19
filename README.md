@@ -93,8 +93,6 @@ This project is open source and available under the [MIT License](LICENSE).
 
 - LinkedIn: [narayanan-k1](https://www.linkedin.com/in/narayanan-k1/)
 - Email: narayanan.k.info@gmail.com
-- GitHub: [@Narayanan-info](https://github.com/Narayanan-info)
-
 ---
 
 Made with ❤️ by Narayanan K in Chennai, India
